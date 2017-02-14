@@ -1,4 +1,4 @@
-package com.coachdroid.coachdroid;
+package com.coachdroid.coachdroid.db;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -8,14 +8,14 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-class DBHandler extends SQLiteOpenHelper {
+public class DBHandler extends SQLiteOpenHelper {
 
     // Database Version
     private static final int DATABASE_VERSION = 1;
     // Database Name
     private static final String DATABASE_NAME = "coachDroid";
 
-    DBHandler(Context context) {
+    public DBHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
@@ -38,18 +38,12 @@ class DBHandler extends SQLiteOpenHelper {
 
     public List<Schedule> allSchedules(){
         SQLiteDatabase db = this.getReadableDatabase();
-        List<DBObject> ret = new Schedule().selectAll(db);
-        // Unchecked Warning!
-        // This wont cause problems because Schedule#selectAll only creates Schedules
-        return (List<Schedule>) (List<?>) ret;
+        return DBObjectFactory.selectSchedules(db);
     }
 
-    public List<Series> allSeries(Series s){
+    public List<Series> allSeries(Schedule schedule){
         SQLiteDatabase db = this.getReadableDatabase();
-        List<DBObject> ret = s.selectAll(db);
-        // Unchecked Warning!
-        // This wont cause problems because Series#selectAll only creates Series
-        return (List<Series>) (List<?>) ret;
+        return DBObjectFactory.selectSeries(db, schedule.getId());
     }
 
     public String testeDosRole(){

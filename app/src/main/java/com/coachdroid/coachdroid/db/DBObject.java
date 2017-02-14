@@ -1,28 +1,24 @@
-package com.coachdroid.coachdroid;
+package com.coachdroid.coachdroid.db;
 
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import java.util.ArrayList;
-import java.util.List;
-
 abstract class DBObject {
     protected ContentValues values;
 
     // Supported types for SQLite
-    protected static String tID = "INTEGER PRIMARY KEY";
-    protected static String tINT = "INTEGER";
-    protected static String tNUM = "NUMERIC";
-    protected static String tReal = "REAL";
-    protected static String tTEXT = "TEXT";
-    protected static String tBlob = "BLOB";
+    static String tID = "INTEGER PRIMARY KEY";
+    static String tINT = "INTEGER";
+    static String tNUM = "NUMERIC";
+    static String tReal = "REAL";
+    static String tTEXT = "TEXT";
+    static String tBlob = "BLOB";
 
     abstract String[] getColumns();
     abstract String[] getColumnTypes();
-    abstract DBObject makeFromCursor(Cursor c);
 
-    protected DBObject(){
+    DBObject(){
         values = new ContentValues();
         for (String col : getColumns()){
             values.putNull(col);
@@ -33,7 +29,7 @@ abstract class DBObject {
         this.values = values;
     }
 
-    String getCreationSQL(){
+    private String getCreationSQL(){
         StringBuilder builder = new StringBuilder("CREATE TABLE ");
         builder.append(getTableName());
         builder.append("(");
@@ -109,23 +105,6 @@ abstract class DBObject {
         long res = db.
                 insertWithOnConflict(getTableName(), null, values, SQLiteDatabase.CONFLICT_REPLACE);
         return (res != -1);
-    }
-
-    List<DBObject> selectAll(SQLiteDatabase db){
-        List<DBObject> ret = new ArrayList<>();
-
-        String sql = "SELECT * FROM " + getTableName();
-        Cursor c = db.rawQuery(sql, null);
-
-        if(c.moveToFirst()){
-            do {
-                ret.add(makeFromCursor(c));
-            } while (c.moveToNext());
-        }
-
-        c.close();
-        return ret;
-
     }
 
 }

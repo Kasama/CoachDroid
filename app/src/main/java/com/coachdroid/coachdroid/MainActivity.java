@@ -1,34 +1,76 @@
 package com.coachdroid.coachdroid;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
+import com.coachdroid.coachdroid.db.DBHandler;
+import com.coachdroid.coachdroid.db.Schedule;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final int CREATE_SCHEDULE = 0;
+    public static final int CREATE_SERIES = 1;
+
+    private List<Schedule> schedules;
+    private ArrayAdapter<Schedule> schedulesView;
+    private Toolbar toolbar;
+    private ListView scheduleList;
+    private DBHandler db;
+    private FloatingActionButton fab;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        scheduleList = (ListView) findViewById(R.id.listSchedule);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+
         setSupportActionBar(toolbar);
 
-        DBHandler db = new DBHandler(this);
-        Schedule schedule = new Schedule("teste");
-        db.save(schedule);
+        db = new DBHandler(this);
+        refreshSchedules();
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        refreshListView();
+
         fab.setOnClickListener(view -> {
-                    Log.d("DEBUG: ", db.testeDosRole());
-                    Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                }
+            Intent i = new Intent(this, NewScheduleActivity.class);
+            startActivityForResult(i, CREATE_SCHEDULE);
+        }
         );
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        switch (requestCode){
+            case CREATE_SCHEDULE:
+                Log.d("DEBUG:", "Came back from activity\nresult: " + resultCode + "\nok: " + RESULT_OK + "\ncancel: " + RESULT_CANCELED);
+                if (resultCode == RESULT_OK){
+                    Schedule newSchedule = Schedule.build(data);
+                    db.save(newSchedule);
+                    refreshSchedules();
+                    refreshListView();
+                }
+                break;
+            case CREATE_SERIES:
+                break;
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -51,5 +93,14 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void refreshSchedules(){
+        schedules = db.allSchedules();
+        schedulesView = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, schedules);
+    }
+
+    private void refreshListView(){
+        scheduleList.setAdapter(schedulesView);
     }
 }

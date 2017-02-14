@@ -1,20 +1,20 @@
-package com.coachdroid.coachdroid;
+package com.coachdroid.coachdroid.db;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-class Series extends DBObject {
+public class Series extends DBObject {
 
     private static String[] columns = {"id", "name", "schedule", "description", "length", "times"};
     private static String[] column_types = {tID, tTEXT, tINT, tTEXT, tINT, tINT};
 
-    Series(boolean fake){}
+    public Series(boolean fake){}
 
-    Series(){
+    public Series(){
         super();
     }
 
-    Series(String name, int schedule, String description, int length, int times){
+    public Series(String name, int schedule, String description, int length, int times){
         this();
         setName(name);
         setSchedule(schedule);
@@ -23,9 +23,24 @@ class Series extends DBObject {
         setTimes(times);
     }
 
-    Series(int id, String name, int schedule, String description, int length, int times){
+    public Series(int id, String name, int schedule, String description, int length, int times){
         this(name, schedule, description, length, times);
         setId(id);
+    }
+
+    static Series makeFromCursor(Cursor c) {
+        Series ret = new Series();
+        ret.setId(c.getInt(c.getColumnIndex(columns[0])));
+        ret.setName(c.getString(c.getColumnIndex(columns[1])));
+        ret.setSchedule(c.getInt(c.getColumnIndex(columns[2])));
+        ret.setDescription(c.getString(c.getColumnIndex(columns[3])));
+        ret.setLength(c.getInt(c.getColumnIndex(columns[4])));
+        ret.setTimes(c.getInt(c.getColumnIndex(columns[5])));
+        return ret;
+    }
+
+    static String scheduleCompare(int schedule) {
+        return columns[2] + " = " + schedule;
     }
 
     @Override
@@ -36,18 +51,6 @@ class Series extends DBObject {
     @Override
     String[] getColumnTypes() {
         return column_types;
-    }
-
-    @Override
-    Series makeFromCursor(Cursor c) {
-        Series ret = new Series();
-        ret.setId(c.getInt(c.getColumnIndex(columns[0])));
-        ret.setName(c.getString(c.getColumnIndex(columns[1])));
-        ret.setSchedule(c.getInt(c.getColumnIndex(columns[2])));
-        ret.setDescription(c.getString(c.getColumnIndex(columns[3])));
-        ret.setLength(c.getInt(c.getColumnIndex(columns[4])));
-        ret.setTimes(c.getInt(c.getColumnIndex(columns[5])));
-        return ret;
     }
 
     @Override
@@ -103,5 +106,4 @@ class Series extends DBObject {
     public void setTimes(int times) {
         values.put(columns[5], times);
     }
-
 }

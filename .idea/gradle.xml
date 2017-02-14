@@ -7,8 +7,8 @@
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="modules">
           <set>
-            <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/app" />
+            <option value="$USER_HOME$/MEGA/USP/Programação/Android/CoachDroid" />
+            <option value="$USER_HOME$/MEGA/USP/Programação/Android/CoachDroid/app" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

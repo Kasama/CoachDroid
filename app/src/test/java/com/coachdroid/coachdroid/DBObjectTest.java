@@ -1,5 +1,8 @@
 package com.coachdroid.coachdroid;
 
+import com.coachdroid.coachdroid.db.Schedule;
+import com.coachdroid.coachdroid.db.Series;
+
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
