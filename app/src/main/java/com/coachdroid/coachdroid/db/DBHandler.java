@@ -5,6 +5,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.coachdroid.coachdroid.User;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,14 +38,43 @@ public class DBHandler extends SQLiteOpenHelper {
         obj.save(db);
     }
 
+    public void delete(DBObject obj){
+        SQLiteDatabase db = this.getWritableDatabase();
+        obj.delete(db);
+    }
+
     public List<Schedule> allSchedules(){
-        SQLiteDatabase db = this.getReadableDatabase();
-        return DBObjectFactory.selectSchedules(db);
+        List<Schedule> ret = new ArrayList<>();
+
+        query(new Schedule().getTableName(), null, null,
+                c -> ret.add(Schedule.build(c))
+        );
+
+        return ret;
     }
 
     public List<Series> allSeries(Schedule schedule){
+        List<Series> ret = new ArrayList<>();
+
+        query(new Series().getTableName(), Series.scheduleCompare(schedule.getId()), null,
+                c -> ret.add(Series.makeFromCursor(c))
+        );
+
+        return ret;
+    }
+
+    private void query(String table, String where, String[] args, User<Cursor> u){
         SQLiteDatabase db = this.getReadableDatabase();
-        return DBObjectFactory.selectSeries(db, schedule.getId());
+
+        Cursor c = db.query(false, table, null, where, args, null, null, null, null);
+
+        if (c.moveToFirst()){
+            do {
+                u.use(c);
+            } while (c.moveToNext());
+        }
+
+        c.close();
     }
 
     public String testeDosRole(){

@@ -17,6 +17,7 @@ abstract class DBObject {
 
     abstract String[] getColumns();
     abstract String[] getColumnTypes();
+    abstract int getPK();
 
     DBObject(){
         values = new ContentValues();
@@ -80,6 +81,10 @@ abstract class DBObject {
         return getColumns()[i];
     }
 
+    String pkWhere(int compare){
+        return pkColumn() + " = " + compare;
+    }
+
     int nextID(SQLiteDatabase db){
         int max;
         String sql = "SELECT max(" + pkColumn() + ") FROM " + getTableName() + ";";
@@ -105,6 +110,11 @@ abstract class DBObject {
         long res = db.
                 insertWithOnConflict(getTableName(), null, values, SQLiteDatabase.CONFLICT_REPLACE);
         return (res != -1);
+    }
+
+    boolean delete(SQLiteDatabase db) {
+        long res = db.delete(getTableName(), pkWhere(getPK()), null);
+        return (res != 0);
     }
 
 }

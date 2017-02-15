@@ -70,6 +70,11 @@ public class Schedule extends DBObject {
     }
 
     @Override
+    int getPK(){
+        return getId();
+    }
+
+    @Override
     boolean save(SQLiteDatabase db) {
         if (getId() == null) setId(nextID(db));
         return super.save(db);
@@ -77,6 +82,11 @@ public class Schedule extends DBObject {
 
     @Override
     public String toString() {
-        return "DEBUG: " + this.getName();
+        return getName();
+    }
+
+    @Override
+    boolean delete(SQLiteDatabase db) {
+        return getId() != null && super.delete(db);
     }
 }

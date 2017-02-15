@@ -45,6 +45,12 @@ public class ScheduleViewActivity extends AppCompatActivity {
         refreshSchedules();
 
         refreshListView();
+        scheduleList.setOnItemClickListener((parent, view, pos, id) -> {
+            Schedule s = (Schedule) parent.getAdapter().getItem(pos);
+            db.delete(s);
+            refreshSchedules();
+            refreshListView();
+        });
 
         fab.setOnClickListener(view -> {
             Intent i = new Intent(this, NewScheduleActivity.class);
