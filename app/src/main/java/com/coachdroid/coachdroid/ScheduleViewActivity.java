@@ -65,7 +65,7 @@ public class ScheduleViewActivity extends AppCompatActivity {
 
         switch (requestCode){
             case CREATE_SCHEDULE:
-                Log.d("DEBUG:", "Came back from activity\nresult: " + resultCode + "\nok: " + RESULT_OK + "\ncancel: " + RESULT_CANCELED);
+                Log.d("D/CoachDroid", "Came back from activity\nresult: " + resultCode + "\nok: " + RESULT_OK + "\ncancel: " + RESULT_CANCELED);
                 if (resultCode == RESULT_OK){
                     Schedule newSchedule = Schedule.build(data);
                     db.save(newSchedule);
@@ -80,7 +80,7 @@ public class ScheduleViewActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_schedule_view, menu);
+//        getMenuInflater().inflate(R.menu.menu_schedule_view, menu);
         return true;
     }
 
@@ -103,5 +103,6 @@ public class ScheduleViewActivity extends AppCompatActivity {
         schedules = db.allSchedules();
         schedulesView = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, schedules);
         scheduleList.setAdapter(schedulesView);
+        Log.d("D/CoachDroid", db.testeDosRole());
     }
 }

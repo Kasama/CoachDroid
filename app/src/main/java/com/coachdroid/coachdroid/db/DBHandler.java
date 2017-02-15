@@ -40,6 +40,12 @@ public class DBHandler extends SQLiteOpenHelper {
 
     public void delete(DBObject obj){
         SQLiteDatabase db = this.getWritableDatabase();
+        if (obj instanceof Schedule){
+            List<Series> series = allSeries((Schedule) obj);
+            for (Series d : series) {
+                delete(d);
+            }
+        }
         obj.delete(db);
     }
 
@@ -85,12 +91,26 @@ public class DBHandler extends SQLiteOpenHelper {
         Cursor c = db.rawQuery(sql, null);
         c.moveToFirst();
         do {
-            builder.append("Got: ");
+            builder.append("Schedules Got: ");
             builder.append(c.getInt(0));
             builder.append(" - name: ");
             builder.append(c.getString(1));
             builder.append("\n");
         } while (c.moveToNext());
+
+        c.close();
+
+        sql = "SELECT * FROM SERIES;";
+        c = db.rawQuery(sql, null);
+        if(c.moveToFirst()) {
+            do {
+                builder.append("Series Got: ");
+                builder.append(c.getInt(0));
+                builder.append(" - name: ");
+                builder.append(c.getString(1));
+                builder.append("\n");
+            } while (c.moveToNext());
+        }
 
         c.close();
         return builder.toString();

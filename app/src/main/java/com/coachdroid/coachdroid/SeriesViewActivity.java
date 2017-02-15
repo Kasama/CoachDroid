@@ -7,16 +7,23 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
 
 import com.coachdroid.coachdroid.db.DBHandler;
 import com.coachdroid.coachdroid.db.Schedule;
+import com.coachdroid.coachdroid.db.Series;
+
+import java.util.List;
 
 public class SeriesViewActivity extends AppCompatActivity {
 
-    Schedule schedule;
-    Toolbar toolbar;
-    FloatingActionButton fab;
-    DBHandler db;
+    private Schedule schedule;
+    private Toolbar toolbar;
+    private FloatingActionButton fab;
+    private DBHandler db;
+    private List<Series> series;
+    private ListView seriesList;
+    private SeriesAdapter seriesAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +32,7 @@ public class SeriesViewActivity extends AppCompatActivity {
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         fab = (FloatingActionButton) findViewById(R.id.fab);
+        seriesList = (ListView) findViewById(R.id.listSeries);
 
         setSupportActionBar(toolbar);
 
@@ -32,6 +40,7 @@ public class SeriesViewActivity extends AppCompatActivity {
         toolbar.setTitle(schedule.getName());
 
         db = new DBHandler(this);
+        refreshList();
 
         fab.setOnClickListener(
                 view -> finish()
@@ -56,5 +65,11 @@ public class SeriesViewActivity extends AppCompatActivity {
                     finish();
                 }).show();
         return true;
+    }
+
+    private void refreshList(){
+        series = db.allSeries(schedule);
+        seriesAdapter = new SeriesAdapter(this, series);
+        seriesList.setAdapter(seriesAdapter);
     }
 }
