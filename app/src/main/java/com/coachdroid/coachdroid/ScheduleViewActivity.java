@@ -16,7 +16,7 @@ import com.coachdroid.coachdroid.db.Schedule;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class ScheduleViewActivity extends AppCompatActivity {
 
     public static final int CREATE_SCHEDULE = 0;
     public static final int CREATE_SERIES = 1;
@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_schedule_view);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         scheduleList = (ListView) findViewById(R.id.listSchedule);
@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_schedule_view, menu);
         return true;
     }
 

@@ -4,4 +4,5 @@
     <string name="schedule_name">Schedule Name</string>
     <string name="cancel">Cancel</string>
     <string name="create">Create</string>
+    <string name="schedule_title">Schedules</string>
 </resources>

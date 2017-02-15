@@ -10,8 +10,8 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.coachdroid.coachdroid.MainActivity"
-    tools:showIn="@layout/activity_main">
+    tools:context="com.coachdroid.coachdroid.ScheduleViewActivity"
+    tools:showIn="@layout/activity_schedule_view">
 
     <ListView
         android:layout_width="match_parent"
