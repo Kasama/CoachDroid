@@ -18,7 +18,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".NewScheduleActivity"></activity>
+        <activity android:name=".NewScheduleActivity" />
+        <activity
+            android:name=".SeriesViewActivity"
+            android:label="@string/title_activity_view_schedule"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

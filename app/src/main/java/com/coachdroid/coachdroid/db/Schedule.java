@@ -45,17 +45,17 @@ public class Schedule extends DBObject {
         return ret;
     }
 
-    void setId(int id){
+    public void setId(int id){
         values.put(ID, id);
     }
 
-    Integer getId(){
+    public Integer getId(){
         return values.getAsInteger(ID);
     }
 
-    void setName(String name){ values.put(NAME, name); }
+    public void setName(String name){ values.put(NAME, name); }
 
-    String getName(){
+    public String getName(){
         return values.getAsString(NAME);
     }
 

@@ -20,6 +20,7 @@ public class ScheduleViewActivity extends AppCompatActivity {
 
     public static final int CREATE_SCHEDULE = 0;
     public static final int CREATE_SERIES = 1;
+    private static final int VIEW_SCHEDULE = 2;
 
     private List<Schedule> schedules;
     private ArrayAdapter<Schedule> schedulesView;
@@ -44,12 +45,12 @@ public class ScheduleViewActivity extends AppCompatActivity {
         db = new DBHandler(this);
         refreshSchedules();
 
-        refreshListView();
         scheduleList.setOnItemClickListener((parent, view, pos, id) -> {
-            Schedule s = (Schedule) parent.getAdapter().getItem(pos);
-            db.delete(s);
-            refreshSchedules();
-            refreshListView();
+            Schedule schedule = (Schedule) parent.getAdapter().getItem(pos);
+            Intent intent = new Intent(this, SeriesViewActivity.class);
+            intent.putExtra(Schedule.ID, schedule.getId());
+            intent.putExtra(Schedule.NAME, schedule.getName());
+            startActivityForResult(intent, VIEW_SCHEDULE);
         });
 
         fab.setOnClickListener(view -> {
@@ -68,14 +69,11 @@ public class ScheduleViewActivity extends AppCompatActivity {
                 if (resultCode == RESULT_OK){
                     Schedule newSchedule = Schedule.build(data);
                     db.save(newSchedule);
-                    refreshSchedules();
-                    refreshListView();
                 }
-                break;
-            case CREATE_SERIES:
                 break;
         }
 
+        refreshSchedules();
         super.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -104,9 +102,6 @@ public class ScheduleViewActivity extends AppCompatActivity {
     private void refreshSchedules(){
         schedules = db.allSchedules();
         schedulesView = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, schedules);
-    }
-
-    private void refreshListView(){
         scheduleList.setAdapter(schedulesView);
     }
 }

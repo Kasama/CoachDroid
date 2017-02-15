@@ -4,7 +4,9 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-abstract class DBObject {
+import java.io.Serializable;
+
+abstract class DBObject implements Serializable {
     protected ContentValues values;
 
     // Supported types for SQLite

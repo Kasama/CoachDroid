@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CoachDroid</string>
+    <string name="action_settings">Configurações</string>
+    <string name="cancel">Cancelar</string>
+    <string name="create">Criar</string>
+    <string name="delete_confirm">Tem certeza que deseja remover esse treino?</string>
+    <string name="delete_confirm_title">Remover</string>
+    <string name="delete_schedule">Remover Treino</string>
+    <string name="negative">Não</string>
+    <string name="positive">Sim</string>
+    <string name="schedule_name">Nome do Treino</string>
+    <string name="schedule_name_placeholder">Nome do Treino</string>
+    <string name="schedule_title">Treinos</string>
+</resources>
