@@ -63,7 +63,7 @@ public class DBHandler extends SQLiteOpenHelper {
         List<Series> ret = new ArrayList<>();
 
         query(new Series().getTableName(), Series.scheduleCompare(schedule.getId()), null,
-                c -> ret.add(Series.makeFromCursor(c))
+                c -> ret.add(Series.build(c))
         );
 
         return ret;
@@ -89,14 +89,15 @@ public class DBHandler extends SQLiteOpenHelper {
         String sql = "SELECT * FROM SCHEDULE;";
         StringBuilder builder = new StringBuilder();
         Cursor c = db.rawQuery(sql, null);
-        c.moveToFirst();
-        do {
-            builder.append("Schedules Got: ");
-            builder.append(c.getInt(0));
-            builder.append(" - name: ");
-            builder.append(c.getString(1));
-            builder.append("\n");
-        } while (c.moveToNext());
+        if (c.moveToFirst()) {
+            do {
+                builder.append("Schedules Got: ");
+                builder.append(c.getInt(0));
+                builder.append(" - name: ");
+                builder.append(c.getString(1));
+                builder.append("\n");
+            } while (c.moveToNext());
+        }
 
         c.close();
 

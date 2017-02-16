@@ -12,4 +12,8 @@
     <string name="delete_confirm_title">Delete</string>
     <string name="negative">No</string>
     <string name="positive">Yes</string>
+    <string name="exercice_name">Exercice Name</string>
+    <string name="times">Times</string>
+    <string name="length">Length</string>
+    <string name="description">Description</string>
 </resources>

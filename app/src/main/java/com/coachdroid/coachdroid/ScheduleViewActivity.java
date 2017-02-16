@@ -29,7 +29,6 @@ public class ScheduleViewActivity extends AppCompatActivity {
     private DBHandler db;
     private FloatingActionButton fab;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -47,15 +46,15 @@ public class ScheduleViewActivity extends AppCompatActivity {
 
         scheduleList.setOnItemClickListener((parent, view, pos, id) -> {
             Schedule schedule = (Schedule) parent.getAdapter().getItem(pos);
-            Intent intent = new Intent(this, SeriesViewActivity.class);
+            Intent intent = new Intent(ScheduleViewActivity.this, SeriesViewActivity.class);
             intent.putExtra(Schedule.ID, schedule.getId());
             intent.putExtra(Schedule.NAME, schedule.getName());
-            startActivityForResult(intent, VIEW_SCHEDULE);
+            ScheduleViewActivity.this.startActivityForResult(intent, VIEW_SCHEDULE);
         });
 
         fab.setOnClickListener(view -> {
-            Intent i = new Intent(this, NewScheduleActivity.class);
-            startActivityForResult(i, CREATE_SCHEDULE);
+            Intent i = new Intent(ScheduleViewActivity.this, NewScheduleActivity.class);
+            ScheduleViewActivity.this.startActivityForResult(i, CREATE_SCHEDULE);
         }
         );
     }

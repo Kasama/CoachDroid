@@ -22,7 +22,8 @@
         <activity
             android:name=".SeriesViewActivity"
             android:label="@string/title_activity_view_schedule"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".NewSeriesActivity"></activity>
     </application>
 
 </manifest>

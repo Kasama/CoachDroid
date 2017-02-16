@@ -1,5 +1,6 @@
 package com.coachdroid.coachdroid;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
@@ -17,6 +18,7 @@ import java.util.List;
 
 public class SeriesViewActivity extends AppCompatActivity {
 
+    private static final int NEW_SERIES = 1;
     private Schedule schedule;
     private Toolbar toolbar;
     private FloatingActionButton fab;
@@ -43,8 +45,28 @@ public class SeriesViewActivity extends AppCompatActivity {
         refreshList();
 
         fab.setOnClickListener(
-                view -> finish()
+                view -> {
+                    Intent i = new Intent(this, NewSeriesActivity.class);
+                    startActivityForResult(i, NEW_SERIES);
+                }
         );
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        switch (requestCode){
+            case NEW_SERIES:
+                if (resultCode == RESULT_OK){
+                    data.putExtra(Series.SCHEDULE, schedule.getId());
+                    Series s = Series.build(data);
+                    db.save(s);
+                }
+                break;
+        }
+
+        refreshList();
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
