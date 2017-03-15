@@ -138,4 +138,8 @@ public class Series extends DBObject {
         return getId() != null && super.delete(db);
     }
 
+    public boolean decrementTimes() {
+        setTimes(getTimes() - 1);
+        return getTimes() == 0;
+    }
 }

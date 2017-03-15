@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.coachdroid.coachdroid.db.DBHandler;
 import com.coachdroid.coachdroid.db.Schedule;
@@ -26,6 +27,7 @@ public class SeriesViewActivity extends AppCompatActivity {
     private List<Series> series;
     private ListView seriesList;
     private SeriesAdapter seriesAdapter;
+    private boolean active;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +39,7 @@ public class SeriesViewActivity extends AppCompatActivity {
         seriesList = (ListView) findViewById(R.id.listSeries);
 
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         schedule = Schedule.build(getIntent());
         toolbar.setTitle(schedule.getName());
@@ -44,10 +47,16 @@ public class SeriesViewActivity extends AppCompatActivity {
         db = new DBHandler(this);
         refreshList();
 
+        setInactive();
+
         fab.setOnClickListener(
                 view -> {
-                    Intent i = new Intent(this, NewSeriesActivity.class);
-                    startActivityForResult(i, NEW_SERIES);
+                    if (isActive()){
+                        Toast.makeText(this, "It's not possible to edit the Schedule during activity", Toast.LENGTH_LONG).show();
+                    } else {
+                        Intent i = new Intent(this, NewSeriesActivity.class);
+                        startActivityForResult(i, NEW_SERIES);
+                    }
                 }
         );
     }
@@ -77,21 +86,60 @@ public class SeriesViewActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        new AlertDialog.Builder(this)
-                .setMessage(R.string.delete_confirm)
-                .setTitle(R.string.delete_confirm_title)
-                .setNegativeButton(R.string.negative, (dialog, which) -> {})
-                .setPositiveButton(R.string.positive, (dialog, which) -> {
-                    db.delete(schedule);
-                    setResult(RESULT_OK);
-                    finish();
-                }).show();
+        if (item.getItemId() == android.R.id.home){
+            setResult(RESULT_CANCELED);
+            finish();
+        } else {
+            new AlertDialog.Builder(this)
+                    .setMessage(R.string.delete_confirm)
+                    .setTitle(R.string.delete_confirm_title)
+                    .setNegativeButton(R.string.negative, (dialog, which) -> {
+                    })
+                    .setPositiveButton(R.string.positive, (dialog, which) -> {
+                        db.delete(schedule);
+                        setResult(RESULT_OK);
+                        finish();
+                    }).show();
+        }
         return true;
     }
 
     private void refreshList(){
+        reloadSeriesFromDatabase();
+        reloadSeriesView();
+    }
+
+    private void reloadSeriesFromDatabase(){
         series = db.allSeries(schedule);
-        seriesAdapter = new SeriesAdapter(this, series);
+    }
+
+    private void reloadSeriesView(){
+        seriesAdapter = new SeriesAdapter(this, series, this::onButtonExecuteClick);
         seriesList.setAdapter(seriesAdapter);
+    }
+
+    private void onButtonExecuteClick(int index){
+        setActive();
+        Series serie = series.get(index);
+        if (serie.decrementTimes()) {
+            series.remove(index);
+        }
+        reloadSeriesView();
+    }
+
+    private void setActive(){
+        active = true;
+        fab.setImageResource(android.R.drawable.ic_menu_revert);
+        fab.setRotation(0);
+    }
+
+    private void setInactive(){
+        active = false;
+        fab.setImageResource(android.R.drawable.ic_menu_close_clear_cancel);
+        fab.setRotation(45);
+    }
+
+    private boolean isActive(){
+        return active;
     }
 }

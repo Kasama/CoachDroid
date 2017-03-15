@@ -3,6 +3,8 @@ package com.coachdroid.coachdroid;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.NumberPicker;
@@ -32,6 +34,10 @@ public class NewSeriesActivity extends AppCompatActivity {
         minutesPicker = (NumberPicker) findViewById(R.id.npMinutes);
         secondsPicker = (NumberPicker) findViewById(R.id.npSeconds);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarNewSeries);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         String[] values = new String[SECONDS];
         for (int i = 0; i < values.length; i++){
             values[i] = String.valueOf(i);
@@ -52,9 +58,19 @@ public class NewSeriesActivity extends AppCompatActivity {
 
     }
 
-    public void onClickCancel(View view){
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) cancel();
+        return true;
+    }
+
+    private void cancel() {
         setResult(RESULT_CANCELED, new Intent());
         finish();
+    }
+
+    public void onClickCancel(View view){
+        cancel();
     }
 
     public void onClickCreate(View view){
