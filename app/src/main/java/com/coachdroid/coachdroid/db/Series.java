@@ -1,16 +1,18 @@
 package com.coachdroid.coachdroid.db;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
 
 public class Series extends DBObject {
 
-    private static final String ID = "id";
-    private static final String NAME = "name";
-    private static final String SCHEDULE = "schedule";
-    private static final String DESCRIPTION = "description";
-    private static final String LENGTH = "length";
-    private static final String TIMES = "times";
+    public static final String ID = "id";
+    public static final String NAME = "name";
+    public static final String SCHEDULE = "schedule";
+    public static final String DESCRIPTION = "description";
+    public static final String LENGTH = "length";
+    public static final String TIMES = "times";
 
     private static String[] columns = {ID, NAME, SCHEDULE, DESCRIPTION, LENGTH, TIMES};
     private static String[] column_types = {tID, tTEXT, tINT, tTEXT, tINT, tINT};
@@ -35,7 +37,7 @@ public class Series extends DBObject {
         setId(id);
     }
 
-    static Series makeFromCursor(Cursor c) {
+    static Series build(Cursor c) {
         Series ret = new Series();
         ret.setId(c.getInt(c.getColumnIndex(ID)));
         ret.setName(c.getString(c.getColumnIndex(NAME)));
@@ -43,6 +45,18 @@ public class Series extends DBObject {
         ret.setDescription(c.getString(c.getColumnIndex(DESCRIPTION)));
         ret.setLength(c.getInt(c.getColumnIndex(LENGTH)));
         ret.setTimes(c.getInt(c.getColumnIndex(TIMES)));
+        return ret;
+    }
+
+    public static Series build(Intent i) {
+        Series ret = new Series();
+        Bundle bundle = i.getExtras();
+        ret.setId(bundle.getInt(ID));
+        ret.setName(bundle.getString(NAME));
+        ret.setDescription(bundle.getString(DESCRIPTION));
+        ret.setSchedule(bundle.getInt(SCHEDULE));
+        ret.setLength(bundle.getInt(LENGTH));
+        ret.setTimes(bundle.getInt(TIMES));
         return ret;
     }
 
@@ -115,12 +129,17 @@ public class Series extends DBObject {
 
     @Override
     boolean save(SQLiteDatabase db) {
-        if (getId() == null) setId(nextID(db));
+        if (getId() == null || getId() == 0) setId(nextID(db));
         return super.save(db);
     }
 
     @Override
     boolean delete(SQLiteDatabase db) {
         return getId() != null && super.delete(db);
+    }
+
+    public boolean decrementTimes() {
+        setTimes(getTimes() - 1);
+        return getTimes() == 0;
     }
 }

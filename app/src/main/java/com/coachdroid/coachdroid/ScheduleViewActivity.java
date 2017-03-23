@@ -5,9 +5,10 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -29,7 +30,6 @@ public class ScheduleViewActivity extends AppCompatActivity {
     private DBHandler db;
     private FloatingActionButton fab;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -45,19 +45,24 @@ public class ScheduleViewActivity extends AppCompatActivity {
         db = new DBHandler(this);
         refreshSchedules();
 
-        scheduleList.setOnItemClickListener((parent, view, pos, id) -> {
-            Schedule schedule = (Schedule) parent.getAdapter().getItem(pos);
-            Intent intent = new Intent(this, SeriesViewActivity.class);
-            intent.putExtra(Schedule.ID, schedule.getId());
-            intent.putExtra(Schedule.NAME, schedule.getName());
-            startActivityForResult(intent, VIEW_SCHEDULE);
+        scheduleList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
+                Schedule schedule = (Schedule) parent.getAdapter().getItem(pos);
+                Intent intent = new Intent(ScheduleViewActivity.this, SeriesViewActivity.class);
+                intent.putExtra(Schedule.ID, schedule.getId());
+                intent.putExtra(Schedule.NAME, schedule.getName());
+                ScheduleViewActivity.this.startActivityForResult(intent, VIEW_SCHEDULE);
+            }
         });
 
-        fab.setOnClickListener(view -> {
-            Intent i = new Intent(this, NewScheduleActivity.class);
-            startActivityForResult(i, CREATE_SCHEDULE);
-        }
-        );
+        fab.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View view) {
+               Intent i = new Intent(ScheduleViewActivity.this, NewScheduleActivity.class);
+               ScheduleViewActivity.this.startActivityForResult(i, CREATE_SCHEDULE);
+           }
+         });
     }
 
     @Override
@@ -65,7 +70,7 @@ public class ScheduleViewActivity extends AppCompatActivity {
 
         switch (requestCode){
             case CREATE_SCHEDULE:
-                Log.d("D/CoachDroid", "Came back from activity\nresult: " + resultCode + "\nok: " + RESULT_OK + "\ncancel: " + RESULT_CANCELED);
+//                Log.d("D/CoachDroid", "Came back from activity\nresult: " + resultCode + "\nok: " + RESULT_OK + "\ncancel: " + RESULT_CANCELED);
                 if (resultCode == RESULT_OK){
                     Schedule newSchedule = Schedule.build(data);
                     db.save(newSchedule);
@@ -103,6 +108,6 @@ public class ScheduleViewActivity extends AppCompatActivity {
         schedules = db.allSchedules();
         schedulesView = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, schedules);
         scheduleList.setAdapter(schedulesView);
-        Log.d("D/CoachDroid", db.testeDosRole());
+//        Log.d("D/CoachDroid", db.testeDosRole());
     }
 }
